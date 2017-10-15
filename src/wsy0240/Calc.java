@@ -3,7 +3,7 @@ package wsy0240;
 import java.util.Scanner;
 import java.math.BigDecimal;
 import java.util.Arrays;
-public class Calc {
+public class Calc implements CalcInterface{
 
 	public static double parseOperand(String operand){
 		double sum=0;
@@ -30,7 +30,7 @@ public class Calc {
 		}
 		return sum;
 	}
-	public static String debrackle(String input){
+	public static String debracket(String input){
 		int counter=0;
 		for(int i=0;i<input.length();i++){
 			char r=input.charAt(i);
@@ -38,12 +38,12 @@ public class Calc {
 				counter++;
 			}
 		}
-		int brackleposition[]=new int[counter];
+		int bracketposition[]=new int[counter];
 		counter=0;
 		for(int i=0;i<input.length();i++){
 			char r=input.charAt(i);
 			if(r=='('|r==')'){
-				brackleposition[counter]=i;
+				bracketposition[counter]=i;
 				counter++;
 			}
 		}
@@ -51,11 +51,11 @@ public class Calc {
 		int deltalength=0;
 		for(int i=0;i<counter;i++){
 			if(i<counter-1){
-				if(input.charAt(brackleposition[i]+deltalength-2*counter2)=='('&input.charAt(brackleposition[i+1]+deltalength-2*counter2)==')'){
-					String inside=input.substring(brackleposition[i]+deltalength-2*counter2+1,brackleposition[i+1]+deltalength-2*counter2);
-					double insideresult=calculate(inside);
+				if(input.charAt(bracketposition[i]+deltalength-2*counter2)=='('&input.charAt(bracketposition[i+1]+deltalength-2*counter2)==')'){
+					String inside=input.substring(bracketposition[i]+deltalength-2*counter2+1,bracketposition[i+1]+deltalength-2*counter2);
+					double insideresult=calculaterun(inside);
 					String newinside=String.format("%s",insideresult);
-					input=insert(newinside,input,inside,brackleposition[i]+deltalength-2*counter2);
+					input=insert(newinside,input,inside,bracketposition[i]+deltalength-2*counter2);
 					counter2++;
 					deltalength=newinside.length()-inside.length();
 				}
@@ -64,7 +64,7 @@ public class Calc {
 		return input;
 	}
 
-	public static String debracklefull(String input){
+	public static String debracketfull(String input){
 		int counter=0;
 		for(int i=0;i<input.length();i++){
 			char r=input.charAt(i);
@@ -73,7 +73,7 @@ public class Calc {
 			}
 		}
 		for(int i=0;i<counter;i++){
-			input=debrackle(input);
+			input=debracket(input);
 			if(input.indexOf('(')==-1){
 				break;
 			}
@@ -98,17 +98,13 @@ public class Calc {
 	public static void main(String[] args){
 		Scanner in = new Scanner(System.in);
 		String input = in.nextLine();
-		double result=calculatefinal(input);
+		Calc myCalc =new Calc();
+		double result=myCalc.calculate(input);
 		System.out.println(result);
 	}
 
-	public static double calculatefinal(String input){
-		double calcresult=calculatefull(input);
-		return calcresult;
-	}
-
-	public static double calculate2(String input){
-		double calcresult=calculatefull(input);
+	public double calculate(String input){
+		double calcresult=changeform(input);
 		return calcresult;
 	}
 
@@ -193,17 +189,24 @@ public class Calc {
 					char r2=input1.charAt(j);
 					if(r2=='+'|r2=='-'){
 						addandminus[counter]=j;
-						if(j==input1.length()-1){
 
+						for(int k=j+1;k<input1.length();k++){
+							char r3=input1.charAt(k);
+							if(r3!='-'&r3!='+'){
+
+							}
+							else{
+								if(r3=='+'|r3=='-'){
+									counter++;
+									break;
+								}
+							}
 						}
-						else{
-							counter++;
-						}
+
 					}
 				}
 				input=insert2("/",input,2,i);
 				input1=input.substring(0,i);
-
 				if(input1.indexOf("-")==-1){
 					input=insert2("-",input,0,0);
 				}
@@ -211,19 +214,19 @@ public class Calc {
 					if(input.charAt(addandminus[counter])=='-'){
 						input=insert2("+",input,1,addandminus[counter]);
 					}
-					if(input.charAt(addandminus[counter])=='+'){
-						input=insert2("-",input,1,addandminus[counter]);
+					else{
+						if(input.charAt(addandminus[counter])=='+'){
+							input=insert2("-",input,1,addandminus[counter]);
+						}
 					}
 				}
 			}
-
-
 		}
 		return input;
 
 	}
 
-	public static double calculatefull(String input){
+	public static double changeform(String input){
 		for(int x=0;x<input.length();x++){
 			char r=input.charAt(x);
 			if(r=='x'){
@@ -242,13 +245,13 @@ public class Calc {
 				input=insert2(")",input,1,x);
 			}
 		}
-		String line1=debracklefull(input);
+		String line1=debracketfull(input);
 		String line=deminus(line1);
-		double result=calculate(line);
+		double result=calculaterun(line);
 		return result;
 	}
 
-	public static double calculate(String line) {
+	public static double calculaterun(String line) {
 		int arr[]=new int[line.length()];
 		int addlength=0;
 		int minuslength=0;
