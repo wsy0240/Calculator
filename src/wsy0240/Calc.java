@@ -252,6 +252,7 @@ public class Calc implements CalcInterface{
 	}
 
 	public static double calculaterun(String line) {
+		Calc myCalc=new Calc();
 		int arr[]=new int[line.length()];
 		int addlength=0;
 		int minuslength=0;
@@ -286,37 +287,37 @@ public class Calc implements CalcInterface{
 		int prearrminus[]=new int[minuslength+1];
 		int prearrmultiple[]=new int[multiplelength+1];
 		int prearrdivide[]=new int[dividelength+1];
-		int placedicider=0;
+		int pos=0;
 		for(int j=0;j<line.length();j++){
 			char u=line.charAt(j);
 
 			if(u=='+'){
-				Arrays.fill(prearradd,placedicider,placedicider+1,j);
-				placedicider++;
+				Arrays.fill(prearradd,pos,pos+1,j);
+				pos++;
 			}
 		}
-		placedicider=0;
+		pos=0;
 		for(int j=0;j<line.length();j++){
 			char u=line.charAt(j);
 			if(u=='-'){
-				Arrays.fill(prearrminus,placedicider,placedicider+1,j);
-				placedicider++;
+				Arrays.fill(prearrminus,pos,pos+1,j);
+				pos++;
 			}
 		}
-		placedicider=0;
+		pos=0;
 		for(int j=0;j<line.length();j++){
 			char u=line.charAt(j);
 			if(u=='*'){
-				Arrays.fill(prearrmultiple,placedicider,placedicider+1,j);
-				placedicider++;
+				Arrays.fill(prearrmultiple,pos,pos+1,j);
+				pos++;
 			}
 		}
-		placedicider=0;
+		pos=0;
 		for(int j=0;j<line.length();j++){
 			char u=line.charAt(j);
 			if(u=='/'){
-				Arrays.fill(prearrdivide,placedicider,placedicider+1,j);
-				placedicider++;
+				Arrays.fill(prearrdivide,pos,pos+1,j);
+				pos++;
 			}
 		}
 		int arradd[]=Arrays.copyOfRange(prearradd, 0, prearradd.length-1);
@@ -369,7 +370,7 @@ public class Calc implements CalcInterface{
 			int l1=arrprocess1[j].indexOf("*");
 			int l2=arrprocess1[j].indexOf("/");
 			if(l1==-1&l2==-1){
-				arrprocess2[j]=parseOperand(arrprocess1[j]);
+				arrprocess2[j]=myCalc.parseOperand(arrprocess1[j]);
 			}
 			else{
 				for(int m=0;m<prearrmultipleanddivide.length;m++){
@@ -380,14 +381,14 @@ public class Calc implements CalcInterface{
 						for(int o=0;o<arrmultipleanddivide.length+1;o++){
 
 							if(o==0){
-								arrnumber1[o]=parseOperand(arrprocess1[j].substring(0, arrmultipleanddivide[o]));
+								arrnumber1[o]=myCalc.parseOperand(arrprocess1[j].substring(0, arrmultipleanddivide[o]));
 							}
 							else{
 								if(o==arrmultipleanddivide.length){
-									arrnumber1[o]=parseOperand(arrprocess1[j].substring(arrmultipleanddivide[o-1]+1));
+									arrnumber1[o]=myCalc.parseOperand(arrprocess1[j].substring(arrmultipleanddivide[o-1]+1));
 								}
 								else{
-									arrnumber1[o]=parseOperand(arrprocess1[j].substring(arrmultipleanddivide[o-1]+1, arrmultipleanddivide[o]));
+									arrnumber1[o]=myCalc.parseOperand(arrprocess1[j].substring(arrmultipleanddivide[o-1]+1, arrmultipleanddivide[o]));
 
 								}
 							}
