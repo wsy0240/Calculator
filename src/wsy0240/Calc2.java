@@ -4,11 +4,11 @@ import java.util.Scanner;
 import java.util.Stack;
 
 public class Calc2 implements CalcInterface {
-	private static Stack<Double> operands = new Stack<Double>();
-	private static Stack<Character> operators = new Stack<Character>();
-	private static Stack<Integer> operatorspos=new Stack<Integer>();
 
-	public double calculate(String input) {
+	public static double basiccalculate(String input) {
+		Stack<Double> operands = new Stack<Double>();
+	    Stack<Character> operators = new Stack<Character>();
+		Stack<Integer> operatorspos=new Stack<Integer>();
 		operators.push('+');
 		operatorspos.push(-1);
 		for(int i=0;i<input.length();i++){
@@ -59,6 +59,29 @@ public class Calc2 implements CalcInterface {
 			}
 			operators.pop();
 		}
+		return result;
+	}
+	public static String debracket(String input){
+		for(int i=0;i<input.length();i++){
+			char j=input.charAt(i);
+			if((j=='(')){
+				String bracket="[(]+[^)]*+[)]";
+				for(int f=i;f<input.length();f++){
+					String originalfraction=input.substring(i,f);
+					if(originalfraction.matches(bracket)){
+						String fraction=originalfraction.substring(1,originalfraction.length()-1);
+						String result=String.format("%s",(basiccalculate(fraction)));
+						input=Calc.insert(result,input,fraction,i);
+					}
+				}
+			}
+		}
+		return input;
+	}
+	
+	public double calculate(String input){
+		input=debracket(input);
+		double result=basiccalculate(input);
 		return result;
 	}
 	public static void main(String[] args) {

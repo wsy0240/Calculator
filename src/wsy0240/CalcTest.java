@@ -51,14 +51,10 @@ public class CalcTest {
 			}
 		};
 		System.out.println();
-		System.out.println();
 		System.out.println("Test passed: ("+counter+"/"+results.length+")");		
 	}
-
 	public static void main(String[] args) {
 		Calc myCalc =new Calc();
 		test(myCalc);
-
 	}
-
 }
